@@ -12,32 +12,35 @@ class ProfilesController extends BaseController {
 	public function __construct() {
    		$this->beforeFilter('csrf', array('on'=>'post'));
 	}
-	public function index()
+	public function getIndex()
 	{
-        return View::make('profiles.index');
+        return View::make('index');
 	}
 
-	public function login()
+    public function getProfile() {
+        return View::make('profiles.index');
+    }
+
+	public function postLogin()
 	{
         $input = Input::all();
-        dd($input);
+
 		$rules = array('email'=>'required|email',
   					  'password'=>'required|alpha_num|between:6,12');
+
 		$validation = Validator::make($input, $rules);
-		if($validation->passes()){
-if (Auth::attempt(array('email'=>Input::get('email'), 'password'=>Input::get('password')))) {
 
-   return Redirect::route('profiles.index')->with('message', 'You are now logged in!');
-} else {
-	
-   return Redirect::to('/')
-      ->with('message', 'Your username/password combination was incorrect')
-      ->withInput();
-}
-
-		}else{
-			return Redirect::back()->withInput()->withErrors($validation);
-		}
+        if($validation->passes()){
+            if ( Auth::attempt( array( 'email'=>Input::get('email'), 'password'=>Input::get('password') ) ) ) {
+                return Redirect::to('profile')->with('message', 'You are now logged in!');
+            } else {
+               return Redirect::to('/')
+                  ->with('message', 'Your username/password combination was incorrect')
+                  ->withInput();
+            }
+        }else{
+            return Redirect::back()->withInput()->withErrors($validation);
+        }
 	}
 
 
@@ -66,7 +69,8 @@ if (Auth::attempt(array('email'=>Input::get('email'), 'password'=>Input::get('pa
 			return Redirect::to('/')->with('message', 'Thanks for registering!');
 
 		}else{
-			return Redirect::back()->withInput()->withErrors($validation);
+			//return Redirect::back()->withInput()->withErrors($validation);
+            return "Error";
 		}
 		
 	}
