@@ -11,7 +11,9 @@ class ProfilesController extends BaseController {
 	 */
 	public function __construct() {
    		$this->beforeFilter('csrf', array('on'=>'post'));
+   		Config::set('auth.model', 'Profile');
 	}
+
 	public function index()
 	{
         return View::make('profiles.index');
@@ -20,12 +22,13 @@ class ProfilesController extends BaseController {
 	public function login()
 	{
         $input = Input::all();
-        dd($input);
 		$rules = array('email'=>'required|email',
   					  'password'=>'required|alpha_num|between:6,12');
 		$validation = Validator::make($input, $rules);
 		if($validation->passes()){
-if (Auth::attempt(array('email'=>Input::get('email'), 'password'=>Input::get('password')))) {
+
+if (Auth::attempt(array('password'=>Input::get('password')))) {
+
 
    return Redirect::route('profiles.index')->with('message', 'You are now logged in!');
 } else {
