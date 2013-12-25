@@ -19,5 +19,15 @@ Route::get('/', function()
 
 
 
-Route::post('profiles/login', 'ProfilesController@login');
-Route::resource('profiles', 'ProfilesController');
+
+//Route::resource('profiles', 'ProfilesController');
+Route::post('profiles/login', 'ProfilesController@postLogin');
+
+Route::get('/', 'ProfilesController@getIndex' );
+Route::get('/login', 'ProfilesController@getIndex' );
+
+Route::group(array('before' => 'auth'), function()
+{
+    Route::get('/profile', 'ProfilesController@getProfile');
+
+});
